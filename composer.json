@@ -1,0 +1,19 @@
+{
+    "name": "yassin/prova",
+    "description": "Prova composer",
+    "type": "project",
+    "require": {
+        "nesbot/carbon": "^2.71"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "ya00"
+        }
+    ]
+}
