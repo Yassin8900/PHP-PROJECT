@@ -1,5 +1,12 @@
 <?php
+session_start();
 require __DIR__ . '/vendor/autoload.php';
+
+// Verificación de sesión
+if (!isset($_SESSION['username'])) {
+    header("Location: /src/html/login.php");
+    exit();
+}
 
 use App\models\Employee;
 use App\config\Database;
@@ -18,6 +25,7 @@ use App\config\Database;
     <div class="container-fluid">
         <div class="row">
             
+
             <div class="col-md-3 col-lg-2 px-0 bg-light sidebar">
                 <div class="position-sticky">
                     <div class="category-header">
@@ -108,7 +116,19 @@ use App\config\Database;
                 }
                 ?>
 
-
+                <div class="row">
+                    <div class="container-fluid">
+                        <div class="d-flex justify-content-between w-100 mb-3">
+                            <span class="navbar-text">
+                                Benvingut, <?= htmlspecialchars($_SESSION['username']) ?>
+                            </span>
+                            <a href="logout.php" class="btn btn-outline-danger">
+                                <i class="fas fa-sign-out-alt"></i> Tancar Sessió
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">Benvingut al Sistema de Gestió</h1>
                 </div>

@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 use App\models\Customer;
+use App\models\Employee;
 
 if (!isset($_GET['id'])) {
     header('Location: /customers/index.php?error=' . urlencode('ID de client no proporcionat'));
@@ -43,6 +44,18 @@ function getGenderText($gender) {
 
 function displayValue($value) {
     return $value === null ? '' : htmlspecialchars($value);
+}
+
+
+function getAccountManagerName($employeeId) {
+    if (!$employeeId) return null;
+    
+    try {
+        $employee = Employee::find($employeeId);
+        return $employee ? $employee->first_name . ' ' . $employee->last_name : null;
+    } catch (Exception $e) {
+        return null;
+    }
 }
 ?>
 
@@ -149,7 +162,7 @@ function displayValue($value) {
                             <dt class="col-sm-4">Gestor Compte:</dt>
                             <dd class="col-sm-8">
                                 <?php if ($customer->ACCOUNT_MGR_ID): ?>
-                                    <?= displayValue($customer->ACCOUNT_MGR_ID) ?>
+                                    <?= displayValue(getAccountManagerName($customer->ACCOUNT_MGR_ID)) ?>
                                 <?php else: ?>
                                     <span class="text-muted">No assignat</span>
                                 <?php endif; ?>
