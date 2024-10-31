@@ -19,7 +19,7 @@ try {
     exit;
 }
 
-// Función auxiliar para manejar valores nulos
+
 function displayValue($value) {
     return $value === null ? '' : htmlspecialchars($value);
 }

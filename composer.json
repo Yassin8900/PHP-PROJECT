@@ -3,7 +3,8 @@
     "description": "Prova composer",
     "type": "project",
     "require": {
-        "nesbot/carbon": "^2.71"
+        "nesbot/carbon": "^2.71",
+        "fakerphp/faker": "^1.23"
     },
     "license": "MIT",
     "autoload": {

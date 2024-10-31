@@ -4,7 +4,7 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 use App\models\Employee;
 use App\config\Database;
 
-// Verificar si se proporcionó un ID
+
 if (!isset($_GET['id'])) {
     header('Location: /index.php?error=' . urlencode('ID de empleado no proporcionado'));
     exit;
@@ -160,7 +160,7 @@ try {
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
-    // Validación del formulario
+        
     (function() {
         'use strict';
         window.addEventListener('load', function() {

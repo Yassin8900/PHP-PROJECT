@@ -17,14 +17,14 @@ use App\config\Database;
 <body>
     <div class="container-fluid">
         <div class="row">
-            <!-- Sidebar -->
+            
             <div class="col-md-3 col-lg-2 px-0 bg-light sidebar">
                 <div class="position-sticky">
                     <div class="category-header">
                         <i class="fas fa-building"></i> Sistema de Gestió
                     </div>
                     
-                    <!-- HR Category -->
+                    
                     <div class="category-header">
                         <i class="fas fa-users"></i> HR
                     </div>
@@ -49,7 +49,7 @@ use App\config\Database;
                         </a>
                     </nav>
 
-                    <!-- OE Category -->
+                    
                     <div class="category-header">
                         <i class="fas fa-shopping-cart"></i> OE
                     </div>
@@ -70,10 +70,10 @@ use App\config\Database;
                 </div>
             </div>
 
-            <!-- Main Content -->
+            
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 content">
                 <?php
-                // Mostrar mensajes de éxito
+                
                 if (isset($_GET['success'])) {
                     $message = '';
                     switch ($_GET['success']) {
@@ -97,7 +97,7 @@ use App\config\Database;
                     }
                 }
 
-                // Mostrar mensajes de error
+                
                 if (isset($_GET['error'])) {
                     echo "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
                             {$_GET['error']}
@@ -108,7 +108,7 @@ use App\config\Database;
                 }
                 ?>
 
-                <!-- Contenido dinámico aquí -->
+
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">Benvingut al Sistema de Gestió</h1>
                 </div>
@@ -144,7 +144,7 @@ use App\config\Database;
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
-        // Marcar el enlace activo según la página actual
+        
         $(document).ready(function() {
             var path = window.location.pathname;
             $('.nav-link').each(function() {
@@ -154,7 +154,7 @@ use App\config\Database;
             });
         });
 
-        // Ocultar alertas automáticamente
+        
         setTimeout(function() {
             $('.alert').alert('close');
         }, 5000);

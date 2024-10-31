@@ -19,7 +19,7 @@ try {
     exit;
 }
 
-// Función auxiliar para mostrar el estado civil en catalán
+
 function getMaritalStatusText($status) {
     $statusMap = [
         'single' => 'Solter/a',
@@ -30,7 +30,7 @@ function getMaritalStatusText($status) {
     return $statusMap[$status] ?? $status;
 }
 
-// Función auxiliar para mostrar el género en catalán
+
 function getGenderText($gender) {
     $genderMap = [
         'M' => 'Home',
@@ -40,7 +40,7 @@ function getGenderText($gender) {
     return $genderMap[$gender] ?? $gender;
 }
 
-// Función auxiliar para manejar valores nulos
+
 function displayValue($value) {
     return $value === null ? '' : htmlspecialchars($value);
 }

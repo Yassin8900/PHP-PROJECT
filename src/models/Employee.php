@@ -4,9 +4,11 @@ namespace App\models;
 
 require_once __DIR__ . '/Model.php';
 require_once __DIR__ . '/../config/Database.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 use App\config\Database;
 use Exception;
+use Faker\Factory;
 
 class Employee extends Model {
     protected static $table = 'employees';
@@ -97,7 +99,7 @@ class Employee extends Model {
                 throw new Exception("ID empleat no informat.");
             }
 
-            // Verificar si existe el empleado
+            
             $stmt = $conn->prepare("SELECT employee_id FROM $table WHERE employee_id = ?");
             $stmt->bind_param("i", $this->employee_id);
             $stmt->execute();
@@ -107,7 +109,7 @@ class Employee extends Model {
                 throw new Exception("L'empleat no existeix.");
             }
 
-            // Eliminar el empleado
+            
             $stmt = $conn->prepare("DELETE FROM $table WHERE employee_id = ?");
             $stmt->bind_param("i", $this->employee_id);
             
@@ -126,56 +128,107 @@ class Employee extends Model {
     }
 
     public static function handleAction() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' || 
+            ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['action'] === 'faker')) {
+            
+            $db = new Database();
+            $conn = $db->getConnection();
+            $conn->autocommit(FALSE);
+            
             try {
-                $action = $_POST['action'] ?? '';
+                $action = $_POST['action'] ?? $_GET['action'] ?? '';
                 
                 switch($action) {
+                    case 'faker':
+                        $faker = Factory::create('es_ES');
+                        
+                        
+                        $result = $conn->query("SELECT MAX(employee_id) as max_id FROM employees");
+                        $row = $result->fetch_assoc();
+                        $nextId = ($row['max_id'] ?? 0) + 1;
+                        
+                        $employee = new self(
+                            $nextId,
+                            $faker->firstName,
+                            $faker->lastName,
+                            $faker->email,
+                            $faker->phoneNumber,
+                            $faker->date('Y-m-d', 'now'),
+                            'IT_PROG',
+                            $faker->numberBetween(30000, 120000),
+                            $faker->randomFloat(2, 0, 0.99),
+                            null,
+                            $faker->numberBetween(10, 110)
+                        );
+                        
+                        if ($employee->save()) {
+                            $conn->commit();
+                            header('Location: /src/html/run_employees.php?success=created');
+                            exit;
+                        }
+                        break;
+
                     case 'create':
                     case 'update':
                         $employee = new self(
-                            $_POST['employee_id'] ?? null,
+                            isset($_POST['employee_id']) ? (int)$_POST['employee_id'] : null,
                             $_POST['first_name'] ?? null,
                             $_POST['last_name'] ?? null,
                             $_POST['email'] ?? null,
                             $_POST['phone_number'] ?? null,
                             $_POST['hire_date'] ?? null,
                             $_POST['job_id'] ?? null,
-                            $_POST['salary'] ?? null,
-                            $_POST['commission_pct'] ?? null,
-                            $_POST['manager_id'] ?? null,
-                            $_POST['department_id'] ?? null
+                            isset($_POST['salary']) ? (float)$_POST['salary'] : null,
+                            isset($_POST['commission_pct']) ? (float)$_POST['commission_pct'] : null,
+                            !empty($_POST['manager_id']) ? (int)$_POST['manager_id'] : null,
+                            !empty($_POST['department_id']) ? (int)$_POST['department_id'] : null
                         );
                         
                         if ($employee->save()) {
-                            header('Location: /index.php?success=' . ($action === 'create' ? 'created' : 'updated'));
+                            $conn->commit();
+                            header('Location: /src/html/run_employees.php?success=' . ($action === 'create' ? 'created' : 'updated'));
+                            exit;
                         }
                         break;
-                        
+
                     case 'delete':
                         if (!isset($_POST['employee_id'])) {
                             throw new Exception("ID de empleado no proporcionado");
                         }
                         
-                        $employee = new self($_POST['employee_id']);
+                        $employee = new self(
+                            (int)$_POST['employee_id'],
+                            null, null, null, null, null, null, 
+                            null, null, null, null
+                        );
+                        
                         if ($employee->destroy()) {
-                            header('Location: /index.php?success=deleted');
+                            $conn->commit();
+                            header('Location: /src/html/run_employees.php?success=deleted');
+                            exit;
                         }
                         break;
-                        
+
                     default:
                         throw new Exception("Acción no válida");
                 }
                 
             } catch (Exception $e) {
-                header('Location: /index.php?error=' . urlencode($e->getMessage()));
+                if (isset($conn)) {
+                    $conn->rollback();
+                }
+                header('Location: /src/html/run_employees.php?error=' . urlencode($e->getMessage()));
+                exit;
+            } finally {
+                if (isset($conn)) {
+                    $conn->close();
+                }
             }
-            exit;
         }
     }
 }
 
-// Manejar las acciones cuando se accede directamente a este archivo
+
 if (basename($_SERVER['PHP_SELF']) === 'Employee.php') {
     Employee::handleAction();
 }

@@ -41,7 +41,7 @@ use App\config\Database;
 
     <div class="container mt-5">
         <?php
-        // Mostrar mensajes de éxito
+        
         if (isset($_GET['success'])) {
             $message = '';
             switch ($_GET['success']) {
@@ -65,7 +65,7 @@ use App\config\Database;
             }
         }
 
-        // Mostrar mensajes de error
+        
         if (isset($_GET['error'])) {
             echo "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
                     " . htmlspecialchars($_GET['error']) . "
@@ -78,9 +78,14 @@ use App\config\Database;
 
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1>Gestió d'Empleats</h1>
-            <a href="create_employee.html" class="btn btn-success">
-                <i class="fas fa-plus"></i> Nou Empleat
-            </a>
+            <div>
+                <a href="/src/models/Employee.php?action=faker" class="btn btn-info mr-2">
+                    <i class="fas fa-random"></i> Generar Empleat
+                </a>
+                <a href="create_employee.html" class="btn btn-success">
+                    <i class="fas fa-plus"></i> Nou Empleat
+                </a>
+            </div>
         </div>
         
         <div class="card">
@@ -128,7 +133,7 @@ use App\config\Database;
                                                 <i class='fas fa-edit'></i>
                                             </a>";
                                         // Botón Eliminar
-                                        echo "<form action='src/models/Employee.php' method='POST' style='display:inline;'>";
+                                        echo "<form action='/src/models/Employee.php' method='POST' style='display:inline;'>";
                                         echo "<input type='hidden' name='action' value='delete'>";
                                         echo "<input type='hidden' name='employee_id' value='" . $employee->employee_id . "'>";
                                         echo "<button type='submit' class='btn btn-danger btn-sm' 
@@ -153,12 +158,12 @@ use App\config\Database;
         </div>
     </div>
 
-    <!-- Scripts de Bootstrap -->
+    
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <!-- Script para ocultar las alertas automáticamente -->
+    
     <script>
         setTimeout(function() {
             $('.alert').alert('close');

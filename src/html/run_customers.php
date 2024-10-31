@@ -59,7 +59,7 @@ function displayValue($value) {
     </nav>
 
     <div class="container mt-5">
-        <!-- Mostrar mensajes de éxito -->
+        
         <?php
         if (isset($_GET['success'])) {
             $message = '';
@@ -97,9 +97,14 @@ function displayValue($value) {
 
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1>Gestió de Clients</h1>
-            <a href="create_customer.html" class="btn btn-success">
-                <i class="fas fa-plus"></i> Nou Client
-            </a>
+            <div>
+                <a href="/src/models/Customer.php?action=faker" class="btn btn-info mr-2">
+                    <i class="fas fa-random"></i> Generar Client
+                </a>
+                <a href="create_customer.html" class="btn btn-success">
+                    <i class="fas fa-plus"></i> Nou Client
+                </a>
+            </div>
         </div>
         
         <div class="card">
@@ -156,12 +161,12 @@ function displayValue($value) {
         </div>
     </div>
 
-    <!-- Scripts de Bootstrap -->
+    
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <!-- Script para ocultar las alertas automáticamente -->
+    
     <script>
         setTimeout(function() {
             $('.alert').alert('close');
