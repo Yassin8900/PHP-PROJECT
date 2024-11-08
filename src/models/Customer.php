@@ -14,27 +14,220 @@ class Customer extends Model {
     protected static $table = 'customers';
     protected static $primaryKey = 'customer_id';
 
+    private ?int $CUSTOMER_ID = null;
+    private ?string $CUST_FIRST_NAME = null;
+    private ?string $CUST_LAST_NAME = null;
+    private ?string $CUST_STREET_ADDRESS = null;
+    private ?string $CUST_POSTAL_CODE = null;
+    private ?string $CUST_CITY = null;
+    private ?string $CUST_STATE = null;
+    private ?string $CUST_COUNTRY = null;
+    private ?string $PHONE_NUMBERS = null;
+    private ?string $NLS_LANGUAGE = null;
+    private ?string $NLS_TERRITORY = null;
+    private ?float $CREDIT_LIMIT = null;
+    private ?string $CUST_EMAIL = null;
+    private ?int $ACCOUNT_MGR_ID = null;
+    private ?string $CUST_GEO_LOCATION = null;
+    private ?string $DATE_OF_BIRTH = null;
+    private ?string $MARITAL_STATUS = null;
+    private ?string $GENDER = null;
+    private ?string $INCOME_LEVEL = null;
+
     public function __construct(
-        public ?int $CUSTOMER_ID = null,
-        public ?string $CUST_FIRST_NAME = null,
-        public ?string $CUST_LAST_NAME = null,
-        public ?string $CUST_STREET_ADDRESS = null,
-        public ?string $CUST_POSTAL_CODE = null,
-        public ?string $CUST_CITY = null,
-        public ?string $CUST_STATE = null,
-        public ?string $CUST_COUNTRY = null,
-        public ?string $PHONE_NUMBERS = null,
-        public ?string $NLS_LANGUAGE = null,
-        public ?string $NLS_TERRITORY = null,
-        public ?float $CREDIT_LIMIT = null,
-        public ?string $CUST_EMAIL = null,
-        public ?int $ACCOUNT_MGR_ID = null,
-        public ?string $CUST_GEO_LOCATION = null,
-        public ?string $DATE_OF_BIRTH = null,
-        public ?string $MARITAL_STATUS = null,
-        public ?string $GENDER = null,
-        public ?string $INCOME_LEVEL = null
-    ) {}
+        ?int $CUSTOMER_ID = null,
+        ?string $CUST_FIRST_NAME = null,
+        ?string $CUST_LAST_NAME = null,
+        ?string $CUST_STREET_ADDRESS = null,
+        ?string $CUST_POSTAL_CODE = null,
+        ?string $CUST_CITY = null,
+        ?string $CUST_STATE = null,
+        ?string $CUST_COUNTRY = null,
+        ?string $PHONE_NUMBERS = null,
+        ?string $NLS_LANGUAGE = null,
+        ?string $NLS_TERRITORY = null,
+        ?float $CREDIT_LIMIT = null,
+        ?string $CUST_EMAIL = null,
+        ?int $ACCOUNT_MGR_ID = null,
+        ?string $CUST_GEO_LOCATION = null,
+        ?string $DATE_OF_BIRTH = null,
+        ?string $MARITAL_STATUS = null,
+        ?string $GENDER = null,
+        ?string $INCOME_LEVEL = null
+    ) {
+        $this->CUSTOMER_ID = $CUSTOMER_ID;
+        $this->CUST_FIRST_NAME = $CUST_FIRST_NAME;
+        $this->CUST_LAST_NAME = $CUST_LAST_NAME;
+        $this->CUST_STREET_ADDRESS = $CUST_STREET_ADDRESS;
+        $this->CUST_POSTAL_CODE = $CUST_POSTAL_CODE;
+        $this->CUST_CITY = $CUST_CITY;
+        $this->CUST_STATE = $CUST_STATE;
+        $this->CUST_COUNTRY = $CUST_COUNTRY;
+        $this->PHONE_NUMBERS = $PHONE_NUMBERS;
+        $this->NLS_LANGUAGE = $NLS_LANGUAGE;
+        $this->NLS_TERRITORY = $NLS_TERRITORY;
+        $this->CREDIT_LIMIT = $CREDIT_LIMIT;
+        $this->CUST_EMAIL = $CUST_EMAIL;
+        $this->ACCOUNT_MGR_ID = $ACCOUNT_MGR_ID;
+        $this->CUST_GEO_LOCATION = $CUST_GEO_LOCATION;
+        $this->DATE_OF_BIRTH = $DATE_OF_BIRTH;
+        $this->MARITAL_STATUS = $MARITAL_STATUS;
+        $this->GENDER = $GENDER;
+        $this->INCOME_LEVEL = $INCOME_LEVEL;
+    }
+
+    // Getters y Setters
+    public function getCustomerId(): ?int {
+        return $this->CUSTOMER_ID;
+    }
+
+    public function setCustomerId(?int $CUSTOMER_ID): void {
+        $this->CUSTOMER_ID = $CUSTOMER_ID;
+    }
+
+    public function getCustFirstName(): ?string {
+        return $this->CUST_FIRST_NAME;
+    }
+
+    public function setCustFirstName(?string $CUST_FIRST_NAME): void {
+        $this->CUST_FIRST_NAME = $CUST_FIRST_NAME;
+    }
+
+    public function getCustLastName(): ?string {
+        return $this->CUST_LAST_NAME;
+    }
+
+    public function setCustLastName(?string $CUST_LAST_NAME): void {
+        $this->CUST_LAST_NAME = $CUST_LAST_NAME;
+    }
+
+    public function getCustStreetAddress(): ?string {
+        return $this->CUST_STREET_ADDRESS;
+    }
+
+    public function setCustStreetAddress(?string $CUST_STREET_ADDRESS): void {
+        $this->CUST_STREET_ADDRESS = $CUST_STREET_ADDRESS;
+    }
+
+    public function getCustPostalCode(): ?string {
+        return $this->CUST_POSTAL_CODE;
+    }
+
+    public function setCustPostalCode(?string $CUST_POSTAL_CODE): void {
+        $this->CUST_POSTAL_CODE = $CUST_POSTAL_CODE;
+    }
+
+    public function getCustCity(): ?string {
+        return $this->CUST_CITY;
+    }
+
+    public function setCustCity(?string $CUST_CITY): void {
+        $this->CUST_CITY = $CUST_CITY;
+    }
+
+    public function getCustState(): ?string {
+        return $this->CUST_STATE;
+    }
+
+    public function setCustState(?string $CUST_STATE): void {
+        $this->CUST_STATE = $CUST_STATE;
+    }
+
+    public function getCustCountry(): ?string {
+        return $this->CUST_COUNTRY;
+    }
+
+    public function setCustCountry(?string $CUST_COUNTRY): void {
+        $this->CUST_COUNTRY = $CUST_COUNTRY;
+    }
+
+    public function getPhoneNumbers(): ?string {
+        return $this->PHONE_NUMBERS;
+    }
+
+    public function setPhoneNumbers(?string $PHONE_NUMBERS): void {
+        $this->PHONE_NUMBERS = $PHONE_NUMBERS;
+    }
+
+    public function getNlsLanguage(): ?string {
+        return $this->NLS_LANGUAGE;
+    }
+
+    public function setNlsLanguage(?string $NLS_LANGUAGE): void {
+        $this->NLS_LANGUAGE = $NLS_LANGUAGE;
+    }
+
+    public function getNlsTerritory(): ?string {
+        return $this->NLS_TERRITORY;
+    }
+
+    public function setNlsTerritory(?string $NLS_TERRITORY): void {
+        $this->NLS_TERRITORY = $NLS_TERRITORY;
+    }
+
+    public function getCreditLimit(): ?float {
+        return $this->CREDIT_LIMIT;
+    }
+
+    public function setCreditLimit(?float $CREDIT_LIMIT): void {
+        $this->CREDIT_LIMIT = $CREDIT_LIMIT;
+    }
+
+    public function getCustEmail(): ?string {
+        return $this->CUST_EMAIL;
+    }
+
+    public function setCustEmail(?string $CUST_EMAIL): void {
+        $this->CUST_EMAIL = $CUST_EMAIL;
+    }
+
+    public function getAccountMgrId(): ?int {
+        return $this->ACCOUNT_MGR_ID;
+    }
+
+    public function setAccountMgrId(?int $ACCOUNT_MGR_ID): void {
+        $this->ACCOUNT_MGR_ID = $ACCOUNT_MGR_ID;
+    }
+
+    public function getCustGeoLocation(): ?string {
+        return $this->CUST_GEO_LOCATION;
+    }
+
+    public function setCustGeoLocation(?string $CUST_GEO_LOCATION): void {
+        $this->CUST_GEO_LOCATION = $CUST_GEO_LOCATION;
+    }
+
+    public function getDateOfBirth(): ?string {
+        return $this->DATE_OF_BIRTH;
+    }
+
+    public function setDateOfBirth(?string $DATE_OF_BIRTH): void {
+        $this->DATE_OF_BIRTH = $DATE_OF_BIRTH;
+    }
+
+    public function getMaritalStatus(): ?string {
+        return $this->MARITAL_STATUS;
+    }
+
+    public function setMaritalStatus(?string $MARITAL_STATUS): void {
+        $this->MARITAL_STATUS = $MARITAL_STATUS;
+    }
+
+    public function getGender(): ?string {
+        return $this->GENDER;
+    }
+
+    public function setGender(?string $GENDER): void {
+        $this->GENDER = $GENDER;
+    }
+
+    public function getIncomeLevel(): ?string {
+        return $this->INCOME_LEVEL;
+    }
+
+    public function setIncomeLevel(?string $INCOME_LEVEL): void {
+        $this->INCOME_LEVEL = $INCOME_LEVEL;
+    }
 
     public function save() {
         try {
@@ -49,6 +242,28 @@ class Customer extends Model {
 
             if ($this->CREDIT_LIMIT > 5000) {
                 throw new Exception("El límit de crèdit no pot ser superior a 5000");
+            }
+
+            // Verificar si el email ya existe
+            $stmt = $conn->prepare("SELECT customer_id FROM $table WHERE CUST_EMAIL = ? AND customer_id != ?");
+            $stmt->bind_param("si", $this->CUST_EMAIL, $this->CUSTOMER_ID);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows > 0) {
+                throw new Exception("El email ya está en uso.");
+            }
+
+            // Verificar existencia de ACCOUNT_MGR_ID
+            if ($this->ACCOUNT_MGR_ID) {
+                $stmt = $conn->prepare("SELECT employee_id FROM employees WHERE employee_id = ?");
+                $stmt->bind_param("i", $this->ACCOUNT_MGR_ID);
+                $stmt->execute();
+                $result = $stmt->get_result();
+
+                if ($result->num_rows === 0) {
+                    throw new Exception("El ACCOUNT_MGR_ID no existe.");
+                }
             }
 
             $sql = "INSERT INTO $table (
@@ -184,66 +399,44 @@ class Customer extends Model {
                         $row = $result->fetch_assoc();
                         $nextId = ($row['max_id'] ?? 0) + 1;
                         
-                        $firstName = substr($faker->firstName, 0, 20);
-                        $lastName = substr($faker->lastName, 0, 20);
-                        $streetAddress = substr($faker->streetAddress, 0, 100);
-                        $postalCode = substr($faker->postcode, 0, 10);
-                        $city = substr($faker->city, 0, 20);
-                        $state = substr($faker->state, 0, 20);
-                        $country = substr('Spain', 0, 20);
-                        $phone = substr($faker->phoneNumber, 0, 100);
-                        $email = substr($faker->email, 0, 30);
-                        
-                        // Crear un objeto JSON válido para la geolocalización
-                        $geoLocation = json_encode([
-                            "type" => "Point",
-                            "coordinates" => [
-                                $faker->longitude,
-                                $faker->latitude
-                            ]
-                        ]);
-                        
                         $customer = new self(
                             $nextId,
-                            $firstName,
-                            $lastName,
-                            $streetAddress,
-                            $postalCode,
-                            $city,
-                            $state,
-                            $country,
-                            $phone,
-                            'es',  // NLS_LANGUAGE (3 chars)
-                            'ES',  // NLS_TERRITORY (30 chars max)
-                            $faker->randomFloat(2, 0, 5000), // CREDIT_LIMIT max 5000
-                            $email,
+                            $faker->firstName(),
+                            $faker->lastName(),
+                            $faker->streetAddress(),
+                            $faker->postcode(),
+                            $faker->city(),
+                            $faker->state(),
+                            'Spain',
+                            $faker->phoneNumber(),
+                            'es',
+                            'ES',
+                            $faker->randomFloat(2, 0, 5000),
+                            $faker->email(),
                             $faker->numberBetween(145, 179),
-                            $geoLocation,
+                            null,
                             $faker->date('Y-m-d', '-18 years'),
-                            $faker->randomElement(['single', 'married']), // Solo 'single' o 'married' permitidos
+                            $faker->randomElement(['single', 'married']),
                             $faker->randomElement(['M', 'F']),
                             $faker->randomElement(['A: Below 30,000', 'B: 30,000 - 49,999', 'C: 50,000 - 69,999', 
-                                                 'D: 70,000 - 89,999', 'E: 90,000 - 109,999', 'F: 110,000 - 129,999', 
-                                                 'G: 130,000 - 149,999', 'H: 150,000 - 169,999', 'I: 170,000 - 189,999', 
-                                                 'J: 190,000 - 249,999', 'K: 250,000 - 299,999', 'L: 300,000 and above'])
+                                                   'D: 70,000 - 89,999', 'E: 90,000 - 109,999', 'F: 110,000 - 129,999'])
                         );
                         
                         if ($customer->save()) {
                             $conn->commit();
-                            header('Location: /src/html/run_customers.php?success=created');
+                            header('Location: /src/html/customers/run_customers.php?success=created');
                             exit;
                         }
                         break;
 
                     case 'create':
-                    case 'update':
+                        // Obtener el siguiente ID disponible
+                        $result = $conn->query("SELECT MAX(customer_id) as max_id FROM customers");
+                        $row = $result->fetch_assoc();
+                        $nextId = ($row['max_id'] ?? 0) + 1;
                         
-                        if (empty($_POST['cust_street_address'])) {
-                            throw new Exception("L'adreça és obligatòria");
-                        }
-
                         $customer = new self(
-                            $_POST['customer_id'] ? (int)$_POST['customer_id'] : null,
+                            $nextId,  // Usar el nuevo ID generado
                             $_POST['cust_first_name'] ?? null,
                             $_POST['cust_last_name'] ?? null,
                             $_POST['cust_street_address'] ?? null,
@@ -264,95 +457,54 @@ class Customer extends Model {
                             $_POST['income_level'] ?? null
                         );
                         
-
                         if ($customer->save()) {
-                            $action = ($_POST['action'] === 'create') ? 'created' : 'updated';
-                            header("Location: /src/html/run_customers.php?success=$action");
+                            $conn->commit();
+                            header('Location: /src/html/customers/run_customers.php?success=created');
+                            exit;
+                        }
+                        break;
+                    case 'update':
+                        $customer = new self(
+                            isset($_POST['customer_id']) ? (int)$_POST['customer_id'] : null,
+                            $_POST['cust_first_name'] ?? null,
+                            $_POST['cust_last_name'] ?? null,
+                            $_POST['cust_street_address'] ?? null,
+                            $_POST['cust_postal_code'] ?? null,
+                            $_POST['cust_city'] ?? null,
+                            $_POST['cust_state'] ?? null,
+                            $_POST['cust_country'] ?? null,
+                            $_POST['phone_numbers'] ?? null,
+                            $_POST['nls_language'] ?? null,
+                            $_POST['nls_territory'] ?? null,
+                            isset($_POST['credit_limit']) ? (float)$_POST['credit_limit'] : null,
+                            $_POST['cust_email'] ?? null,
+                            $_POST['account_mgr_id'] ? (int)$_POST['account_mgr_id'] : null,
+                            $_POST['cust_geo_location'] ?? null,
+                            $_POST['date_of_birth'] ?? null,
+                            strtolower($_POST['marital_status'] ?? ''),
+                            $_POST['gender'] ?? null,
+                            $_POST['income_level'] ?? null
+                        );
+                        
+                        if ($customer->save()) {
+                            $conn->commit();
+                            header('Location: /src/html/customers/run_customers.php?success=updated');
                             exit;
                         }
                         break;
                     case 'delete':
-                        // Obtener el ID del cliente del POST
-                        $customerId = $_POST['customer_id'] ?? null;
-                        
-                        if (!$customerId) {
+                        if (!isset($_POST['customer_id'])) {
                             throw new Exception('ID de client no proporcionat');
                         }
-
-                        $db = new Database();
-                        $conn = $db->getConnection();
-
-                        // Iniciamos una transacción
-                        $conn->begin_transaction();
-
-                        try {
-                            
-                            $sqlDelete = "DELETE FROM customers WHERE customer_id = ?";
-                            $stmtDelete = $conn->prepare($sqlDelete);
-                            $stmtDelete->bind_param("i", $customerId);
-                            
-                            if (!$stmtDelete->execute()) {
-                                throw new Exception("Error al eliminar el client: " . $stmtDelete->error);
-                            }
-
-                            
-                            $conn->commit();
-                            header('Location: /src/html/run_customers.php?success=deleted');
-                            exit;
-
-                        } catch (Exception $e) {
-                            
-                            $conn->rollback();
-                            throw new Exception("Error en eliminar el client: " . $e->getMessage());
-                        } finally {
-                            if (isset($stmtDelete)) {
-                                $stmtDelete->close();
-                            }
-                            if (isset($conn)) {
-                                $conn->close();
-                            }
-                        }
-                        break;
-                    case 'delete':
-                        // Obtener el ID del cliente del POST
-                        $customerId = $_POST['customer_id'] ?? null;
                         
-                        if (!$customerId) {
-                            throw new Exception('ID de client no proporcionat');
-                        }
-
-                        $db = new Database();
-                        $conn = $db->getConnection();
-
-                        // Iniciamos una transacción
-                        $conn->begin_transaction();
-
-                        try {
-                            
-                            $sqlDelete = "DELETE FROM customers WHERE customer_id = ?";
-                            $stmtDelete = $conn->prepare($sqlDelete);
-                            $stmtDelete->bind_param("i", $customerId);
-                            
-                            if (!$stmtDelete->execute()) {
-                                throw new Exception("Error al eliminar el client: " . $stmtDelete->error);
-                            }
-
-                            
+                        $customer = new self((int)$_POST['customer_id']);
+                        
+                        if ($customer->destroy()) {
                             $conn->commit();
-                            header('Location: /src/html/run_customers.php?success=deleted');
+                            header('Location: /src/html/customers/run_customers.php?success=deleted');
                             exit;
-
-                        } catch (Exception $e) {
-                            
-                            $conn->rollback();
-                            throw new Exception("Error en eliminar el client: " . $e->getMessage());
-                        } finally {
-                            if (isset($stmtDelete)) {
-                                $stmtDelete->close();
-                            }
-                            if (isset($conn)) {
-                                $conn->close();
-                            }
+                        } else {
+                            throw new Exception("Error al eliminar el client");
                         }
                         break;
 
@@ -360,11 +512,13 @@ class Customer extends Model {
                         throw new Exception('Acció no vàlida');
                 }
             } catch (Exception $e) {
-                header('Location: /src/html/run_customers.php?error=' . urlencode($e->getMessage()));
+                header('Location: /src/html/customers/run_customers.php?error=' . urlencode($e->getMessage()));
                 exit;
             }
         }
     }
+
+    
 }
 
 

@@ -14,19 +14,132 @@ class Employee extends Model {
     protected static $table = 'employees';
     protected static $primaryKey = 'employee_id';
 
+    private ?int $employee_id = null;
+    private ?string $first_name = null;
+    private ?string $last_name = null;
+    private ?string $email = null;
+    private ?string $phone_number = null;
+    private ?string $hire_date = null;
+    private ?string $job_id = null;
+    private ?float $salary = null;
+    private ?float $commission_pct = null;
+    private ?int $manager_id = null;
+    private ?int $department_id = null;
+
     public function __construct(
-        public ?int $employee_id = null,
-        public ?string $first_name = null,
-        public ?string $last_name = null,
-        public ?string $email = null,
-        public ?string $phone_number = null,
-        public ?string $hire_date = null,
-        public ?string $job_id = null,
-        public ?float $salary = null,
-        public ?float $commission_pct = null,
-        public ?int $manager_id = null,
-        public ?int $department_id = null
-    ) {}
+        ?int $employee_id = null,
+        ?string $first_name = null,
+        ?string $last_name = null,
+        ?string $email = null,
+        ?string $phone_number = null,
+        ?string $hire_date = null,
+        ?string $job_id = null,
+        ?float $salary = null,
+        ?float $commission_pct = null,
+        ?int $manager_id = null,
+        ?int $department_id = null
+    ) {
+        $this->employee_id = $employee_id;
+        $this->first_name = $first_name;
+        $this->last_name = $last_name;
+        $this->email = $email;
+        $this->phone_number = $phone_number;
+        $this->hire_date = $hire_date;
+        $this->job_id = $job_id;
+        $this->salary = $salary;
+        $this->commission_pct = $commission_pct;
+        $this->manager_id = $manager_id;
+        $this->department_id = $department_id;
+    }
+
+    // Getters y Setters
+    public function getEmployeeId(): ?int {
+        return $this->employee_id;
+    }
+
+    public function setEmployeeId(?int $employee_id): void {
+        $this->employee_id = $employee_id;
+    }
+
+    public function getFirstName(): ?string {
+        return $this->first_name;
+    }
+
+    public function setFirstName(?string $first_name): void {
+        $this->first_name = $first_name;
+    }
+
+    public function getLastName(): ?string {
+        return $this->last_name;
+    }
+
+    public function setLastName(?string $last_name): void {
+        $this->last_name = $last_name;
+    }
+
+    public function getEmail(): ?string {
+        return $this->email;
+    }
+
+    public function setEmail(?string $email): void {
+        $this->email = $email;
+    }
+
+    public function getPhoneNumber(): ?string {
+        return $this->phone_number;
+    }
+
+    public function setPhoneNumber(?string $phone_number): void {
+        $this->phone_number = $phone_number;
+    }
+
+    public function getHireDate(): ?string {
+        return $this->hire_date;
+    }
+
+    public function setHireDate(?string $hire_date): void {
+        $this->hire_date = $hire_date;
+    }
+
+    public function getJobId(): ?string {
+        return $this->job_id;
+    }
+
+    public function setJobId(?string $job_id): void {
+        $this->job_id = $job_id;
+    }
+
+    public function getSalary(): ?float {
+        return $this->salary;
+    }
+
+    public function setSalary(?float $salary): void {
+        $this->salary = $salary;
+    }
+
+    public function getCommissionPct(): ?float {
+        return $this->commission_pct;
+    }
+
+    public function setCommissionPct(?float $commission_pct): void {
+        $this->commission_pct = $commission_pct;
+    }
+
+    public function getManagerId(): ?int {
+        return $this->manager_id;
+    }
+
+    public function setManagerId(?int $manager_id): void {
+        $this->manager_id = $manager_id;
+    }
+
+    public function getDepartmentId(): ?int {
+        return $this->department_id;
+    }
+
+    public function setDepartmentId(?int $department_id): void {
+        $this->department_id = $department_id;
+    }
 
     public function save() {
         try {
@@ -36,6 +149,50 @@ class Employee extends Model {
 
             if (!isset($this->employee_id)) {
                 throw new Exception("ID empleat no informat.");
+            }
+
+            // Verificar si el email ya existe
+            $stmt = $conn->prepare("SELECT employee_id FROM $table WHERE email = ? AND employee_id != ?");
+            $stmt->bind_param("si", $this->email, $this->employee_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows > 0) {
+                throw new Exception("El email ya está en uso.");
+            }
+            
+            //Verificar si el manager_id existe como empleado
+            $stmt = $conn->prepare("SELECT employee_id FROM $table WHERE employee_id = ?");
+            $stmt->bind_param("i", $this->manager_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows === 0) {
+                throw new Exception("El manager_id no existe.");
+            }
+
+            // Verificar existencia de job_id
+            if ($this->job_id) {
+                $stmt = $conn->prepare("SELECT job_id FROM jobs WHERE job_id = ?");
+                $stmt->bind_param("s", $this->job_id);
+                $stmt->execute();
+                $result = $stmt->get_result();
+
+                if ($result->num_rows === 0) {
+                    throw new Exception("El job_id no existe.");
+                }
+            }
+
+            // Verificar existencia de department_id
+            if ($this->department_id) {
+                $stmt = $conn->prepare("SELECT department_id FROM departments WHERE department_id = ?");
+                $stmt->bind_param("i", $this->department_id);
+                $stmt->execute();
+                $result = $stmt->get_result();
+
+                if ($result->num_rows === 0) {
+                    throw new Exception("El department_id no existe.");
+                }
             }
 
             $sql = "INSERT INTO $table (
@@ -142,33 +299,57 @@ class Employee extends Model {
                     case 'faker':
                         $faker = Factory::create('es_ES');
                         
-                        
                         $result = $conn->query("SELECT MAX(employee_id) as max_id FROM employees");
                         $row = $result->fetch_assoc();
                         $nextId = ($row['max_id'] ?? 0) + 1;
                         
                         $employee = new self(
                             $nextId,
-                            $faker->firstName,
-                            $faker->lastName,
-                            $faker->email,
-                            $faker->phoneNumber,
+                            $faker->firstName(),
+                            $faker->lastName(),
+                            $faker->email(),
+                            $faker->phoneNumber(),
                             $faker->date('Y-m-d', 'now'),
                             'IT_PROG',
                             $faker->numberBetween(30000, 120000),
                             $faker->randomFloat(2, 0, 0.99),
-                            null,
-                            $faker->numberBetween(10, 110)
+                            $faker->numberBetween(100, 200),
+                            $faker->randomElement([10, 20, 30, 40, 50, 60, 70, 80, 90, 100])
                         );
                         
                         if ($employee->save()) {
                             $conn->commit();
-                            header('Location: /src/html/run_employees.php?success=created');
+                            header('Location: /src/html/employees/run_employees.php?success=created');
                             exit;
                         }
                         break;
 
                     case 'create':
+                        $result = $conn->query("SELECT MAX(employee_id) as max_id FROM employees");
+                        $row = $result->fetch_assoc();
+                        $nextId = ($row['max_id'] ?? 0) + 1;
+                        
+                        $employee = new self(
+                            $nextId,
+                            $_POST['first_name'] ?? null,
+                            $_POST['last_name'] ?? null,
+                            $_POST['email'] ?? null,
+                            $_POST['phone_number'] ?? null,
+                            $_POST['hire_date'] ?? null,
+                            $_POST['job_id'] ?? null,
+                            isset($_POST['salary']) ? (float)$_POST['salary'] : null,
+                            isset($_POST['commission_pct']) ? (float)$_POST['commission_pct'] : null,
+                            !empty($_POST['manager_id']) ? (int)$_POST['manager_id'] : null,
+                            !empty($_POST['department_id']) ? (int)$_POST['department_id'] : null
+                        );
+                        
+                        if ($employee->save()) {
+                            $conn->commit();
+                            header('Location: /src/html/employees/run_employees.php?success=created');
+                            exit;
+                        }
+                        break;
+
                     case 'update':
                         $employee = new self(
                             isset($_POST['employee_id']) ? (int)$_POST['employee_id'] : null,
@@ -186,7 +367,7 @@ class Employee extends Model {
                         
                         if ($employee->save()) {
                             $conn->commit();
-                            header('Location: /src/html/run_employees.php?success=' . ($action === 'create' ? 'created' : 'updated'));
+                            header('Location: /src/html/employees/run_employees.php?success=updated');
                             exit;
                         }
                         break;
@@ -204,7 +385,7 @@ class Employee extends Model {
                         
                         if ($employee->destroy()) {
                             $conn->commit();
-                            header('Location: /src/html/run_employees.php?success=deleted');
+                            header('Location: /src/html/employees/run_employees.php?success=deleted');
                             exit;
                         }
                         break;
@@ -217,7 +398,7 @@ class Employee extends Model {
                 if (isset($conn)) {
                     $conn->rollback();
                 }
-                header('Location: /src/html/run_employees.php?error=' . urlencode($e->getMessage()));
+                header('Location: /src/html/employees/run_employees.php?error=' . urlencode($e->getMessage()));
                 exit;
             } finally {
                 if (isset($conn)) {

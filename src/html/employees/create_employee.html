@@ -18,44 +18,36 @@
                 </div>
             </div>
             <div class="card-body">
-                <form method="POST" action="/src/models/Employee.php" class="needs-validation" novalidate>
+                <form method="POST" action="../../models/Employee.php" class="needs-validation" novalidate>
                     <input type="hidden" name="action" value="create">
 
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="employee_id">ID Empleat:</label>
-                                <input type="number" id="employee_id" name="employee_id" class="form-control" required>
-                                <small class="text-muted">Ha de ser un número enter únic</small>
-                                <div class="invalid-feedback">
-                                    El ID de empleado es requerido
-                                </div>
-                            </div>
-                            <div class="form-group">
                                 <label for="first_name">Nom:</label>
                                 <input type="text" id="first_name" name="first_name" class="form-control" 
                                     maxlength="20" required>
-                                <small class="text-muted">Màxim 20 caràcters</small>
+                                <small class="text-muted">Camp obligatori. Màxim 20 caràcters</small>
                                 <div class="invalid-feedback">
-                                    El nombre es requerido (máximo 20 caracteres)
+                                    El nom és obligatori (màxim 20 caràcters)
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="last_name">Llinatge:</label>
                                 <input type="text" id="last_name" name="last_name" class="form-control" 
                                     maxlength="25" required>
-                                <small class="text-muted">Màxim 25 caràcters</small>
+                                <small class="text-muted">Camp obligatori. Màxim 25 caràcters</small>
                                 <div class="invalid-feedback">
-                                    El apellido es requerido (máximo 25 caracteres)
+                                    El llinatge és obligatori (màxim 25 caràcters)
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="email">Email:</label>
                                 <input type="email" id="email" name="email" class="form-control" 
                                     maxlength="25" required>
-                                <small class="text-muted">Format: exemple@domini.com (Màxim 25 caràcters)</small>
+                                <small class="text-muted">Camp obligatori. Format: exemple@domini.com (Màxim 25 caràcters)</small>
                                 <div class="invalid-feedback">
-                                    Por favor ingrese un email válido (máximo 25 caracteres)
+                                    Si us plau, introdueix un email vàlid (màxim 25 caràcters)
                                 </div>
                             </div>
                             <div class="form-group">
@@ -64,8 +56,6 @@
                                     maxlength="20">
                                 <small class="text-muted">Format opcional: +XX.XXXXXXXXX (Màxim 20 caràcters)</small>
                             </div>
-                        </div>
-                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="hire_date">Data Contractació:</label>
                                 <input type="date" id="hire_date" name="hire_date" class="form-control" required>
@@ -74,6 +64,8 @@
                                     La fecha de contratación es requerida
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="job_id">ID Treball:</label>
                                 <input type="text" id="job_id" name="job_id" class="form-control" 

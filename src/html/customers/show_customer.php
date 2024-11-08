@@ -1,22 +1,22 @@
 <?php
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../../../vendor/autoload.php';
 
 use App\models\Customer;
 use App\models\Employee;
 
 if (!isset($_GET['id'])) {
-    header('Location: /customers/index.php?error=' . urlencode('ID de client no proporcionat'));
+    header('Location: /customers/run_customers.php?error=' . urlencode('ID de client no proporcionat'));
     exit;
 }
 
 try {
     $customer = Customer::find($_GET['id']);
     if (!$customer) {
-        header('Location: /customers/index.php?error=' . urlencode('Client no trobat'));
+        header('Location: /customers/run_customers.php?error=' . urlencode('Client no trobat'));
         exit;
     }
 } catch (Exception $e) {
-    header('Location: /customers/index.php?error=' . urlencode($e->getMessage()));
+    header('Location: /customers/run_customers.php?error=' . urlencode($e->getMessage()));
     exit;
 }
 
@@ -52,7 +52,7 @@ function getAccountManagerName($employeeId) {
     
     try {
         $employee = Employee::find($employeeId);
-        return $employee ? $employee->first_name . ' ' . $employee->last_name : null;
+        return $employee ? $employee->getFirstName() . ' ' . $employee->getLastName() : null;
     } catch (Exception $e) {
         return null;
     }
@@ -84,18 +84,18 @@ function getAccountManagerName($employeeId) {
                         <h4 class="border-bottom pb-2">Informació Personal</h4>
                         <dl class="row">
                             <dt class="col-sm-4">ID:</dt>
-                            <dd class="col-sm-8"><?= displayValue($customer->CUSTOMER_ID) ?></dd>
+                            <dd class="col-sm-8"><?= displayValue($customer->getCustomerId()) ?></dd>
 
                             <dt class="col-sm-4">Nom Complet:</dt>
                             <dd class="col-sm-8">
-                                <?= displayValue($customer->CUST_FIRST_NAME . ' ' . $customer->CUST_LAST_NAME) ?>
+                                <?= displayValue($customer->getCustFirstName() . ' ' . $customer->getCustLastName()) ?>
                             </dd>
 
                             <dt class="col-sm-4">Email:</dt>
                             <dd class="col-sm-8">
-                                <?php if ($customer->CUST_EMAIL): ?>
-                                    <a href="mailto:<?= displayValue($customer->CUST_EMAIL) ?>">
-                                        <?= displayValue($customer->CUST_EMAIL) ?>
+                                <?php if ($customer->getCustEmail()): ?>
+                                    <a href="mailto:<?= displayValue($customer->getCustEmail()) ?>">
+                                        <?= displayValue($customer->getCustEmail()) ?>
                                     </a>
                                 <?php else: ?>
                                     <span class="text-muted">No disponible</span>
@@ -104,8 +104,8 @@ function getAccountManagerName($employeeId) {
 
                             <dt class="col-sm-4">Telèfon:</dt>
                             <dd class="col-sm-8">
-                                <?php if ($customer->PHONE_NUMBERS): ?>
-                                    <?= displayValue($customer->PHONE_NUMBERS) ?>
+                                <?php if ($customer->getPhoneNumbers()): ?>
+                                    <?= displayValue($customer->getPhoneNumbers()) ?>
                                 <?php else: ?>
                                     <span class="text-muted">No disponible</span>
                                 <?php endif; ?>
@@ -113,12 +113,12 @@ function getAccountManagerName($employeeId) {
 
                             <dt class="col-sm-4">Estat Civil:</dt>
                             <dd class="col-sm-8">
-                                <?= displayValue(getMaritalStatusText($customer->MARITAL_STATUS)) ?>
+                                <?= displayValue(getMaritalStatusText($customer->getMaritalStatus())) ?>
                             </dd>
 
                             <dt class="col-sm-4">Gènere:</dt>
                             <dd class="col-sm-8">
-                                <?= displayValue(getGenderText($customer->GENDER)) ?>
+                                <?= displayValue(getGenderText($customer->getGender())) ?>
                             </dd>
                         </dl>
                     </div>
@@ -128,23 +128,35 @@ function getAccountManagerName($employeeId) {
                         <dl class="row">
                             <dt class="col-sm-4">Adreça:</dt>
                             <dd class="col-sm-8">
-                                <?php if ($customer->CUST_STREET_ADDRESS): ?>
-                                    <?= displayValue($customer->CUST_STREET_ADDRESS) ?>
+                                <?php if ($customer->getCustStreetAddress()): ?>
+                                    <?= displayValue($customer->getCustStreetAddress()) ?>
                                 <?php else: ?>
                                     <span class="text-muted">No disponible</span>
                                 <?php endif; ?>
                             </dd>
 
                             <dt class="col-sm-4">Ciutat:</dt>
-                            <dd class="col-sm-8"><?= displayValue($customer->CUST_CITY) ?></dd>
+                            <dd class="col-sm-8">
+                                <?php if ($customer->getCustCity()): ?>
+                                    <?= displayValue($customer->getCustCity()) ?>
+                                <?php else: ?>
+                                    <span class="text-muted">No establert</span>
+                                <?php endif; ?>
+                            </dd>
 
                             <dt class="col-sm-4">Codi Postal:</dt>
-                            <dd class="col-sm-8"><?= displayValue($customer->CUST_POSTAL_CODE) ?></dd>
+                            <dd class="col-sm-8">
+                                <?php if ($customer->getCustPostalCode()): ?>
+                                    <?= displayValue($customer->getCustPostalCode()) ?>
+                                <?php else: ?>
+                                    <span class="text-muted">No establert</span>
+                                <?php endif; ?>
+                            </dd>
 
                             <dt class="col-sm-4">Límit Crèdit:</dt>
                             <dd class="col-sm-8">
-                                <?php if ($customer->CREDIT_LIMIT): ?>
-                                    <?= number_format($customer->CREDIT_LIMIT, 2, ',', '.') ?> €
+                                <?php if ($customer->getCreditLimit()): ?>
+                                    <?= number_format($customer->getCreditLimit(), 2, ',', '.') ?> €
                                 <?php else: ?>
                                     <span class="text-muted">No establert</span>
                                 <?php endif; ?>
@@ -152,8 +164,8 @@ function getAccountManagerName($employeeId) {
 
                             <dt class="col-sm-4">Nivell Ingressos:</dt>
                             <dd class="col-sm-8">
-                                <?php if ($customer->INCOME_LEVEL): ?>
-                                    <?= displayValue($customer->INCOME_LEVEL) ?>
+                                <?php if ($customer->getIncomeLevel()): ?>
+                                    <?= displayValue($customer->getIncomeLevel()) ?>
                                 <?php else: ?>
                                     <span class="text-muted">No disponible</span>
                                 <?php endif; ?>
@@ -161,8 +173,8 @@ function getAccountManagerName($employeeId) {
 
                             <dt class="col-sm-4">Gestor Compte:</dt>
                             <dd class="col-sm-8">
-                                <?php if ($customer->ACCOUNT_MGR_ID): ?>
-                                    <?= displayValue(getAccountManagerName($customer->ACCOUNT_MGR_ID)) ?>
+                                <?php if ($customer->getAccountMgrId()): ?>
+                                    <?= displayValue(getAccountManagerName($customer->getAccountMgrId())) ?>
                                 <?php else: ?>
                                     <span class="text-muted">No assignat</span>
                                 <?php endif; ?>
@@ -173,13 +185,13 @@ function getAccountManagerName($employeeId) {
 
                 <div class="text-center mt-4">
                     <div class="btn-group">
-                        <a href="update_customer.php?id=<?= $customer->CUSTOMER_ID ?>" 
+                        <a href="update_customer.php?id=<?= $customer->getCustomerId() ?>" 
                            class="btn btn-primary">
                             <i class="fas fa-edit"></i> Editar
                         </a>
-                        <form action="../models/Customer.php" method="POST" class="d-inline ml-2">
+                        <form action="../../models/Customer.php" method="POST" class="d-inline ml-2">
                             <input type="hidden" name="action" value="delete">
-                            <input type="hidden" name="customer_id" value="<?= $customer->CUSTOMER_ID ?>">
+                            <input type="hidden" name="customer_id" value="<?= $customer->getCustomerId() ?>">
                             <button type="submit" class="btn btn-danger" 
                                     onclick="return confirm('Estàs segur que vols eliminar aquest client?')">
                                 <i class="fas fa-trash"></i> Eliminar

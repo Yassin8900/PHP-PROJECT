@@ -4,7 +4,7 @@ require __DIR__ . '/vendor/autoload.php';
 
 // Verificación de sesión
 if (!isset($_SESSION['username'])) {
-    header("Location: /src/html/login.php");
+    header("Location: login.php");
     exit();
 }
 
@@ -24,8 +24,7 @@ use App\config\Database;
 <body>
     <div class="container-fluid">
         <div class="row">
-            
-
+            <!-- Barra de navegación -->
             <div class="col-md-3 col-lg-2 px-0 bg-light sidebar">
                 <div class="position-sticky">
                     <div class="category-header">
@@ -37,22 +36,22 @@ use App\config\Database;
                         <i class="fas fa-users"></i> HR
                     </div>
                     <nav class="nav flex-column submenu">
-                        <a class="nav-link" href="/src/html/run_employees.php">
+                        <a class="nav-link" href="/src/html/employees/run_employees.php">
                             <i class="fas fa-user-tie"></i> Empleats
                         </a>
-                        <a class="nav-link" href="/src/html/run_departments.php">
+                        <a class="nav-link" href="/src/html/departments/run_departments.php">
                             <i class="fas fa-sitemap"></i> Departaments
                         </a>
-                        <a class="nav-link" href="/src/html/run_jobs.php">
+                        <a class="nav-link" href="/src/html/jobs/run_jobs.php">
                             <i class="fas fa-briefcase"></i> Treballs
                         </a>
-                        <a class="nav-link" href="/src/html/run_regions.php">
+                        <a class="nav-link" href="/src/html/regions/run_regions.php">
                             <i class="fas fa-globe"></i> Regions
                         </a>
-                        <a class="nav-link" href="/src/html/run_countries.php">
+                        <a class="nav-link" href="/src/html/countries/run_countries.php">
                             <i class="fas fa-flag"></i> Països
                         </a>
-                        <a class="nav-link" href="/src/html/run_locations.php">
+                        <a class="nav-link" href="/src/html/locations/run_locations.php">
                             <i class="fas fa-map-marker-alt"></i> Ubicacions
                         </a>
                     </nav>
@@ -62,16 +61,19 @@ use App\config\Database;
                         <i class="fas fa-shopping-cart"></i> OE
                     </div>
                     <nav class="nav flex-column submenu">
-                        <a class="nav-link" href="/src/html/run_customers.php">
+                        <a class="nav-link" href="/src/html/customers/run_customers.php">
                             <i class="fas fa-user-friends"></i> Clients
                         </a>
-                        <a class="nav-link" href="/src/html/run_orders.php">
+                        <a class="nav-link" href="/src/html/warehouses/run_warehouses.php">
+                            <i class="fas fa-warehouse"></i> Magatzems
+                        </a>
+                        <a class="nav-link" href="/src/html/orders/run_orders.php">
                             <i class="fas fa-file-invoice"></i> Comandes
                         </a>
-                        <a class="nav-link" href="/src/html/run_order_items.php">
+                        <a class="nav-link" href="/src/html/order_items/run_order_items.php">
                             <i class="fas fa-box"></i> Línies de Comanda
                         </a>
-                        <a class="nav-link" href="/src/html/run_products.php">
+                        <a class="nav-link" href="/src/html/products/run_products.php">
                             <i class="fas fa-boxes"></i> Productes
                         </a>
                     </nav>
@@ -80,42 +82,7 @@ use App\config\Database;
 
             
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 content">
-                <?php
-                
-                if (isset($_GET['success'])) {
-                    $message = '';
-                    switch ($_GET['success']) {
-                        case 'created':
-                            $message = 'Registre creat correctament.';
-                            break;
-                        case 'updated':
-                            $message = 'Registre actualitzat correctament.';
-                            break;
-                        case 'deleted':
-                            $message = 'Registre eliminat correctament.';
-                            break;
-                    }
-                    if ($message) {
-                        echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>
-                                {$message}
-                                <button type='button' class='close' data-dismiss='alert'>
-                                    <span>&times;</span>
-                                </button>
-                            </div>";
-                    }
-                }
-
-                
-                if (isset($_GET['error'])) {
-                    echo "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
-                            {$_GET['error']}
-                            <button type='button' class='close' data-dismiss='alert'>
-                                <span>&times;</span>
-                            </button>
-                        </div>";
-                }
-                ?>
-
+                <!-- Mensaje de bienvenida + boton de logout -->
                 <div class="row">
                     <div class="container-fluid">
                         <div class="d-flex justify-content-between w-100 mb-3">
@@ -133,6 +100,7 @@ use App\config\Database;
                     <h1 class="h2">Benvingut al Sistema de Gestió</h1>
                 </div>
 
+                <!-- Cuadros explicativos justo debajo de la bienvenida -->
                 <div class="row">
                     <div class="col-md-6">
                         <div class="card mb-4">
@@ -155,6 +123,31 @@ use App\config\Database;
                         </div>
                     </div>
                 </div>
+
+                <!-- Nueva fila para estadísticas -->
+                <!-- Apartado meramente decorativo, no funcional -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb">
+                            <div class="card-header">
+                                <i class="fas fa-chart-line"></i> Nuevos Clientes (Últimos 30 días)
+                            </div>
+                            <div class="card-body">
+                                <canvas id="newCustomersChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fas fa-chart-bar"></i> Ventas por Departamento
+                            </div>
+                            <div class="card-body">
+                                <canvas id="salesByDepartmentChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </main>
         </div>
     </div>
@@ -164,7 +157,7 @@ use App\config\Database;
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
-        
+        //Para resaltar en el menú superior del "run_tabla.php la tabla seleccionada
         $(document).ready(function() {
             var path = window.location.pathname;
             $('.nav-link').each(function() {
@@ -173,11 +166,54 @@ use App\config\Database;
                 }
             });
         });
+    </script>
+    
+    <!-- Añadir Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        // Configuración del gráfico de nuevos clientes
+        const newCustomersCtx = document.getElementById('newCustomersChart');
+        new Chart(newCustomersCtx, {
+            type: 'line',
+            data: {
+                labels: ['Hace 30 días', 'Hace 25 días', 'Hace 20 días', 'Hace 15 días', 'Hace 10 días', 'Hace 5 días', 'Hoy'],
+                datasets: [{
+                    label: 'Nuevos Clientes',
+                    data: [12, 19, 3, 5, 2, 3, 7],
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            }
+        });
 
-        
-        setTimeout(function() {
-            $('.alert').alert('close');
-        }, 5000);
+        // Configuración del gráfico de ventas por departamento
+        const salesCtx = document.getElementById('salesByDepartmentChart');
+        new Chart(salesCtx, {
+            type: 'bar',
+            data: {
+                labels: ['RRHH', 'Ventas', 'IT', 'Marketing', 'Operaciones'],
+                datasets: [{
+                    label: 'Ventas €',
+                    data: [12000, 19000, 3000, 5000, 2000],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 206, 86)',
+                        'rgb(75, 192, 192)',
+                        'rgb(153, 102, 255)'
+                    ],
+                    borderWidth: 1
+                }]
+            }
+        });
     </script>
 </body>
 </html>

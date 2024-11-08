@@ -1,25 +1,10 @@
 <?php
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../../../vendor/autoload.php';
 
 use App\models\Customer;
 use App\config\Database;
 
-try {
-    $db = new Database();
-    $conn = $db->getConnection();
-    
-    $sql = "SELECT * FROM customers";
-    $stmt = $conn->prepare($sql);
-    $stmt->execute();
-    
-    $result = $stmt->get_result();
-    $customers = [];
-    while ($row = $result->fetch_assoc()) {
-        $customers[] = $row;
-    }
-} catch (Exception $e) {
-    echo "Error: " . $e->getMessage();
-}
+
 
 function displayValue($value) {
     return $value === null ? '' : htmlspecialchars($value);
@@ -48,10 +33,28 @@ function displayValue($value) {
                         <a class="nav-link" href="/index.php">Inici</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/src/html/run_employees.php">Empleats</a>
+                        <a class="nav-link" href="/src/html/employees/run_employees.php">Empleats</a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="/src/html/run_customers.php">Clients</a>
+                        <a class="nav-link" href="/src/html/customers/run_customers.php">Clients</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/src/html/departments/run_departments.php">Departaments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/src/html/jobs/run_jobs.php">Treballs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/src/html/regions/run_regions.php">Regions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/src/html/locations/run_locations.php">Localitzacions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/src/html/countries/run_countries.php">Països</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/src/html/warehouses/run_warehouses.php">Magatzems</a>
                     </li>
                 </ul>
             </div>
@@ -84,7 +87,7 @@ function displayValue($value) {
             }
         }
 
-        // Mostrar mensajes de error
+        
         if (isset($_GET['error'])) {
             echo "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
                     " . htmlspecialchars($_GET['error']) . "
@@ -122,36 +125,42 @@ function displayValue($value) {
                         </thead>
                         <tbody>
                             <?php
-                            if (empty($customers)) {
-                                echo "<tr><td colspan='5' class='text-center'>No hi ha clients registrats</td></tr>";
-                            } else {
-                                foreach ($customers as $customer) {
-                                    echo "<tr>";
-                                    echo "<td>" . displayValue($customer['CUSTOMER_ID']) . "</td>";
-                                    echo "<td>" . displayValue($customer['CUST_FIRST_NAME']) . "</td>";
-                                    echo "<td>" . displayValue($customer['CUST_LAST_NAME']) . "</td>";
-                                    echo "<td>" . displayValue($customer['CUST_EMAIL']) . "</td>";
-                                    echo "<td class='text-center'>";
-                                    echo "<a href='show_customer.php?id=" . $customer['CUSTOMER_ID'] . "' 
-                                           class='btn btn-info btn-sm mr-1' title='Veure detalls'>
-                                           <i class='fas fa-eye'></i>
-                                        </a>";
-                                    echo "<a href='update_customer.php?id=" . $customer['CUSTOMER_ID'] . "' 
-                                           class='btn btn-primary btn-sm mr-1' title='Editar'>
-                                           <i class='fas fa-edit'></i>
-                                        </a>";
-                                    echo "<form action='../models/Customer.php' method='POST' style='display:inline;'>";
-                                    echo "<input type='hidden' name='action' value='delete'>";
-                                    echo "<input type='hidden' name='customer_id' value='" . $customer['CUSTOMER_ID'] . "'>";
-                                    echo "<button type='submit' class='btn btn-danger btn-sm' 
-                                           onclick='return confirm(\"Estàs segur que vols eliminar aquest client?\")' 
-                                           title='Eliminar'>
-                                           <i class='fas fa-trash'></i>
-                                        </button>";
-                                    echo "</form>";
-                                    echo "</td>";
-                                    echo "</tr>";
-                                }
+                            try {
+                                $customers = Customer::all();
+                                if (empty($customers)) {
+                                    echo "<tr><td colspan='5' class='text-center'>No hi ha clients registrats</td></tr>";
+                                } else {
+                                    foreach ($customers as $customer) {
+                                        echo "<tr>";
+                                        echo "<td>" . displayValue($customer->getCustomerId()) . "</td>";
+                                        echo "<td>" . displayValue($customer->getCustFirstName()) . "</td>";
+                                        echo "<td>" . displayValue($customer->getCustLastName()) . "</td>";
+                                        echo "<td>" . displayValue($customer->getCustEmail()) . "</td>";
+                                        echo "<td class='text-center'>";
+                                        echo "<a href='show_customer.php?id=" . $customer->getCustomerId() . "' 
+                                               class='btn btn-info btn-sm mr-1' title='Veure detalls'>
+                                               <i class='fas fa-eye'></i>
+                                            </a>";
+                                        echo "<a href='update_customer.php?id=" . $customer->getCustomerId() . "' 
+                                               class='btn btn-primary btn-sm mr-1' title='Editar'>
+                                               <i class='fas fa-edit'></i>
+                                            </a>";
+                                        echo "<form action='../../models/Customer.php' method='POST' style='display:inline;'>";
+                                        echo "<input type='hidden' name='action' value='delete'>";
+                                        echo "<input type='hidden' name='customer_id' value='" . $customer->getCustomerId() . "'>";
+                                        echo "<button type='submit' class='btn btn-danger btn-sm' 
+                                                onclick='return confirm(\"Estàs segur que vols eliminar aquest client?\")' 
+                                                title='Eliminar'>
+                                               <i class='fas fa-trash'></i>
+                                            </button>";
+                                        echo "</form>";
+                                        echo "</td>";
+                                        echo "</tr>";
+                                    }
+                                } 
+                            } catch (Exception $e) {
+                                echo "<tr><td colspan='5' class='text-center text-danger'>Error: " . 
+                                     htmlspecialchars($e->getMessage()) . "</td></tr>";
                             }
                             ?>
                         </tbody>

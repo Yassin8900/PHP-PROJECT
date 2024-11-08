@@ -10,11 +10,13 @@ if (isset($_SESSION['username'])) {
 
 // Procesar el formulario cuando se envía
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    //Array de usuarios y contraseñas
     $users = [
         'admin' => 'admin123',
         'user1' => '12345678'
     ];
 
+    // Obtener los datos del formulario
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
 

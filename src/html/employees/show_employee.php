@@ -1,7 +1,8 @@
 <?php
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../../../vendor/autoload.php';
 
 use App\models\Employee;
+use App\config\Database;
 
 if (!isset($_GET['id'])) {
     header('Location: /index.php?error=' . urlencode('ID de empleat no proporcionat'));
@@ -13,6 +14,40 @@ try {
     if (!$employee) {
         header('Location: /index.php?error=' . urlencode('Empleat no trobat'));
         exit;
+    }
+
+    $db = new Database();
+    $conn = $db->getConnection();
+
+    // Obtener información del trabajo
+    $jobId = $employee->getJobId();
+    $jobStmt = $conn->prepare("SELECT job_title FROM jobs WHERE job_id = ?");
+    $jobStmt->bind_param("s", $jobId);
+    $jobStmt->execute();
+    $jobResult = $jobStmt->get_result();
+    $jobTitle = $jobResult->fetch_assoc()['job_title'] ?? 'No disponible';
+
+    // Obtener información del departamento
+    $deptName = 'No disponible';
+    $departmentId = $employee->getDepartmentId();
+    if ($departmentId) {
+        $deptStmt = $conn->prepare("SELECT department_name FROM departments WHERE department_id = ?");
+        $deptStmt->bind_param("i", $departmentId);
+        $deptStmt->execute();
+        $deptResult = $deptStmt->get_result();
+        $deptName = $deptResult->fetch_assoc()['department_name'] ?? 'No disponible';
+    }
+
+    // Obtener información del manager
+    $managerName = 'No disponible';
+    $managerId = $employee->getManagerId();
+    if ($managerId) {
+        $mgrStmt = $conn->prepare("SELECT CONCAT(first_name, ' ', last_name) as manager_name 
+                                  FROM employees WHERE employee_id = ?");
+        $mgrStmt->bind_param("i", $managerId);
+        $mgrStmt->execute();
+        $mgrResult = $mgrStmt->get_result();
+        $managerName = $mgrResult->fetch_assoc()['manager_name'] ?? 'No disponible';
     }
 } catch (Exception $e) {
     header('Location: /index.php?error=' . urlencode($e->getMessage()));
@@ -50,19 +85,19 @@ function displayValue($value) {
                         <h4 class="border-bottom pb-2">Informació Personal</h4>
                         <dl class="row">
                             <dt class="col-sm-4">ID:</dt>
-                            <dd class="col-sm-8"><?= displayValue($employee->employee_id) ?></dd>
+                            <dd class="col-sm-8"><?= displayValue($employee->getEmployeeId()) ?></dd>
 
                             <dt class="col-sm-4">Nom:</dt>
-                            <dd class="col-sm-8"><?= displayValue($employee->first_name) ?></dd>
+                            <dd class="col-sm-8"><?= displayValue($employee->getFirstName()) ?></dd>
 
                             <dt class="col-sm-4">Llinatges:</dt>
-                            <dd class="col-sm-8"><?= displayValue($employee->last_name) ?></dd>
+                            <dd class="col-sm-8"><?= displayValue($employee->getLastName()) ?></dd>
 
                             <dt class="col-sm-4">Email:</dt>
                             <dd class="col-sm-8">
-                                <?php if ($employee->email): ?>
-                                    <a href="mailto:<?= displayValue($employee->email) ?>">
-                                        <?= displayValue($employee->email) ?>
+                                <?php if ($employee->getEmail()): ?>
+                                    <a href="mailto:<?= displayValue($employee->getEmail()) ?>">
+                                        <?= displayValue($employee->getEmail()) ?>
                                     </a>
                                 <?php else: ?>
                                     <span class="text-muted">No disponible</span>
@@ -71,9 +106,9 @@ function displayValue($value) {
 
                             <dt class="col-sm-4">Telèfon:</dt>
                             <dd class="col-sm-8">
-                                <?php if ($employee->phone_number): ?>
-                                    <a href="tel:<?= displayValue($employee->phone_number) ?>">
-                                        <?= displayValue($employee->phone_number) ?>
+                                <?php if ($employee->getPhoneNumber()): ?>
+                                    <a href="tel:<?= displayValue($employee->getPhoneNumber()) ?>">
+                                        <?= displayValue($employee->getPhoneNumber()) ?>
                                     </a>
                                 <?php else: ?>
                                     <span class="text-muted">No disponible</span>
@@ -86,15 +121,18 @@ function displayValue($value) {
                         <h4 class="border-bottom pb-2">Informació Laboral</h4>
                         <dl class="row">
                             <dt class="col-sm-4">Data Contracte:</dt>
-                            <dd class="col-sm-8"><?= displayValue($employee->hire_date) ?></dd>
+                            <dd class="col-sm-8"><?= displayValue($employee->getHireDate()) ?></dd>
 
-                            <dt class="col-sm-4">ID Treball:</dt>
-                            <dd class="col-sm-8"><?= displayValue($employee->job_id) ?></dd>
+                            <dt class="col-sm-4">Treball:</dt>
+                            <dd class="col-sm-8">
+                                <?= htmlspecialchars($jobTitle) ?>
+                                <small class="text-muted d-block">ID: <?= displayValue($employee->getJobId()) ?></small>
+                            </dd>
 
                             <dt class="col-sm-4">Salari:</dt>
                             <dd class="col-sm-8">
-                                <?php if ($employee->salary): ?>
-                                    <?= number_format($employee->salary, 2, ',', '.') ?> €
+                                <?php if ($employee->getSalary()): ?>
+                                    <?= number_format($employee->getSalary(), 2, ',', '.') ?> €
                                 <?php else: ?>
                                     <span class="text-muted">No disponible</span>
                                 <?php endif; ?>
@@ -102,30 +140,30 @@ function displayValue($value) {
 
                             <dt class="col-sm-4">Comissió:</dt>
                             <dd class="col-sm-8">
-                                <?php if ($employee->commission_pct): ?>
-                                    <?= number_format($employee->commission_pct * 100, 2, ',', '.') ?> %
+                                <?php if ($employee->getCommissionPct()): ?>
+                                    <?= number_format($employee->getCommissionPct() * 100, 2, ',', '.') ?> %
                                 <?php else: ?>
                                     <span class="text-muted">No disponible</span>
                                 <?php endif; ?>
                             </dd>
 
-                            <dt class="col-sm-4">ID Manager:</dt>
+                            <dt class="col-sm-4">Gerent:</dt>
                             <dd class="col-sm-8">
-                                <?php if ($employee->manager_id): ?>
-                                    <a href="?id=<?= displayValue($employee->manager_id) ?>">
-                                        <?= displayValue($employee->manager_id) ?>
+                                <?php if ($employee->getManagerId()): ?>
+                                    <a href="?id=<?= displayValue($employee->getManagerId()) ?>">
+                                        <?= htmlspecialchars($managerName) ?>
                                     </a>
+                                    <small class="text-muted d-block">ID: <?= displayValue($employee->getManagerId()) ?></small>
                                 <?php else: ?>
                                     <span class="text-muted">No disponible</span>
                                 <?php endif; ?>
                             </dd>
 
-                            <dt class="col-sm-4">ID Departament:</dt>
+                            <dt class="col-sm-4">Departament:</dt>
                             <dd class="col-sm-8">
-                                <?php if ($employee->department_id): ?>
-                                    <?= displayValue($employee->department_id) ?>
-                                <?php else: ?>
-                                    <span class="text-muted">No disponible</span>
+                                <?= htmlspecialchars($deptName) ?>
+                                <?php if ($employee->getDepartmentId()): ?>
+                                    <small class="text-muted d-block">ID: <?= displayValue($employee->getDepartmentId()) ?></small>
                                 <?php endif; ?>
                             </dd>
                         </dl>
@@ -134,13 +172,13 @@ function displayValue($value) {
 
                 <div class="text-center mt-4">
                     <div class="btn-group">
-                        <a href="/src/html/update_employee.php?id=<?= $employee->employee_id ?>" 
+                        <a href="update_employee.php?id=<?= $employee->getEmployeeId() ?>" 
                            class="btn btn-primary">
                             <i class="fas fa-edit"></i> Editar
                         </a>
-                        <form action="../models/Employee.php" method="POST" class="d-inline ml-2">
+                        <form action="../../models/Employee.php" method="POST" class="d-inline ml-2">
                             <input type="hidden" name="action" value="delete">
-                            <input type="hidden" name="employee_id" value="<?= $employee->employee_id ?>">
+                            <input type="hidden" name="employee_id" value="<?= $employee->getEmployeeId() ?>">
                             <button type="submit" class="btn btn-danger" 
                                     onclick="return confirm('Estàs segur que vols eliminar aquest empleat?')">
                                 <i class="fas fa-trash"></i> Eliminar

@@ -1,17 +1,20 @@
 <?php
+require_once __DIR__ . '/../../../vendor/autoload.php';
 
+use App\models\Country;
 
-require_once __DIR__ . '/../../vendor/autoload.php';
-
-use App\models\Employee;
-use App\config\Database;
+try {
+    $countries = Country::all();
+} catch (Exception $e) {
+    $error = $e->getMessage();
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="ca">
 <head>
     <meta charset="UTF-8">
-    <title>Gestió d'Empleats</title>
+    <title>Gestió de Països</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
@@ -28,11 +31,29 @@ use App\config\Database;
                     <li class="nav-item">
                         <a class="nav-link" href="/index.php">Inici</a>
                     </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="/src/html/run_employees.php">Empleats</a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/src/html/employees/run_employees.php">Empleats</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/src/html/run_customers.php">Clients</a>
+                        <a class="nav-link" href="/src/html/customers/run_customers.php">Clients</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/src/html/departments/run_departments.php">Departaments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/src/html/jobs/run_jobs.php">Treballs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/src/html/regions/run_regions.php">Regions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/src/html/locations/run_locations.php">Localitzacions</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/src/html/countries/run_countries.php">Països</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/src/html/warehouses/run_warehouses.php">Magatzems</a>
                     </li>
                 </ul>
             </div>
@@ -41,18 +62,17 @@ use App\config\Database;
 
     <div class="container mt-5">
         <?php
-        
         if (isset($_GET['success'])) {
             $message = '';
             switch ($_GET['success']) {
                 case 'created':
-                    $message = "Empleat creat amb èxit";
+                    $message = "País creat amb èxit";
                     break;
                 case 'updated':
-                    $message = "Empleat actualitzat amb èxit";
+                    $message = "País actualitzat amb èxit";
                     break;
                 case 'deleted':
-                    $message = "Empleat eliminat amb èxit";
+                    $message = "País eliminat amb èxit";
                     break;
             }
             if ($message) {
@@ -65,7 +85,6 @@ use App\config\Database;
             }
         }
 
-        
         if (isset($_GET['error'])) {
             echo "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
                     " . htmlspecialchars($_GET['error']) . "
@@ -77,17 +96,17 @@ use App\config\Database;
         ?>
 
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1>Gestió d'Empleats</h1>
+            <h1>Gestió de Països</h1>
             <div>
-                <a href="/src/models/Employee.php?action=faker" class="btn btn-info mr-2">
-                    <i class="fas fa-random"></i> Generar Empleat
+                <a href="/src/models/Country.php?action=faker" class="btn btn-info mr-2">
+                    <i class="fas fa-random"></i> Generar País
                 </a>
-                <a href="create_employee.html" class="btn btn-success">
-                    <i class="fas fa-plus"></i> Nou Empleat
+                <a href="create_country.html" class="btn btn-success">
+                    <i class="fas fa-plus"></i> Nou País
                 </a>
             </div>
         </div>
-        
+
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
@@ -95,49 +114,38 @@ use App\config\Database;
                         <thead class="thead-dark">
                             <tr>
                                 <th>ID</th>
-                                <th>Nom</th>
-                                <th>Llinatge</th>
-                                <th>Email</th>
-                                <th>Telèfon</th>
-                                <th>Data Contractació</th>
-                                <th>Salari</th>
+                                <th>Nom del País</th>
+                                <th>ID Regió</th>
                                 <th>Accions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
                             try {
-                                $employees = Employee::all();
+                                $countries = Country::all();
                                 
-                                if (empty($employees)) {
-                                    echo "<tr><td colspan='8' class='text-center'>No hi ha empleats registrats</td></tr>";
+                                if (empty($countries)) {
+                                    echo "<tr><td colspan='4' class='text-center'>No hi ha països registrats</td></tr>";
                                 } else {
-                                    foreach($employees as $employee) {
+                                    foreach($countries as $country) {
                                         echo "<tr>";
-                                        echo "<td>" . htmlspecialchars($employee->employee_id) . "</td>";
-                                        echo "<td>" . htmlspecialchars($employee->first_name) . "</td>";
-                                        echo "<td>" . htmlspecialchars($employee->last_name) . "</td>";
-                                        echo "<td>" . htmlspecialchars($employee->email) . "</td>";
-                                        echo "<td>" . htmlspecialchars($employee->phone_number) . "</td>";
-                                        echo "<td>" . htmlspecialchars($employee->hire_date) . "</td>";
-                                        echo "<td>" . number_format($employee->salary, 2, ',', '.') . " €</td>";
+                                        echo "<td>" . htmlspecialchars($country->getCountryId()) . "</td>";
+                                        echo "<td>" . htmlspecialchars($country->getCountryName()) . "</td>";
+                                        echo "<td>" . htmlspecialchars($country->getRegionId()) . "</td>";
                                         echo "<td class='text-center'>";
-                                        // Botón Ver
-                                        echo "<a href='/src/html/show_employee.php?id=" . $employee->employee_id . "' 
+                                        echo "<a href='show_country.php?id=" . $country->getCountryId() . "' 
                                                 class='btn btn-info btn-sm mr-1' title='Veure detalls'>
                                                 <i class='fas fa-eye'></i>
                                             </a>";
-                                        // Botón Editar
-                                        echo "<a href='/src/html/update_employee.php?id=" . $employee->employee_id . "' 
+                                        echo "<a href='update_country.php?id=" . $country->getCountryId() . "' 
                                                 class='btn btn-primary btn-sm mr-1' title='Editar'>
                                                 <i class='fas fa-edit'></i>
                                             </a>";
-                                        // Botón Eliminar
-                                        echo "<form action='/src/models/Employee.php' method='POST' style='display:inline;'>";
+                                        echo "<form action='../../models/Country.php' method='POST' style='display:inline;'>";
                                         echo "<input type='hidden' name='action' value='delete'>";
-                                        echo "<input type='hidden' name='employee_id' value='" . $employee->employee_id . "'>";
+                                        echo "<input type='hidden' name='country_id' value='" . $country->getCountryId() . "'>";
                                         echo "<button type='submit' class='btn btn-danger btn-sm' 
-                                                onclick='return confirm(\"Estàs segur que vols eliminar aquest empleat?\")' 
+                                                onclick='return confirm(\"Estàs segur que vols eliminar aquest país?\")' 
                                                 title='Eliminar'>
                                                 <i class='fas fa-trash'></i>
                                             </button>";
@@ -147,7 +155,7 @@ use App\config\Database;
                                     }
                                 }
                             } catch (Exception $e) {
-                                echo "<tr><td colspan='8' class='text-center text-danger'>Error: " . 
+                                echo "<tr><td colspan='4' class='text-center text-danger'>Error: " . 
                                      htmlspecialchars($e->getMessage()) . "</td></tr>";
                             }
                             ?>
@@ -158,16 +166,13 @@ use App\config\Database;
         </div>
     </div>
 
-    
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-    
     <script>
         setTimeout(function() {
             $('.alert').alert('close');
         }, 5000);
     </script>
 </body>
-</html>
+</html> 

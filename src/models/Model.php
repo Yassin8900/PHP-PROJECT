@@ -45,7 +45,14 @@ class Model {
             $primaryKey = static::$primaryKey;
 
             $stmt = $conn->prepare("SELECT * FROM $table WHERE $primaryKey = ?");
-            $stmt->bind_param("i", $id);
+            
+            // Determinar el tipo de parámetro basado en la clase que llama
+            $paramType = "i"; // Por defecto integer
+            if (static::class === "App\models\Country") {
+                $paramType = "s"; // String para Country
+            }
+            
+            $stmt->bind_param($paramType, $id);
             $stmt->execute();
 
             $result = $stmt->get_result();
